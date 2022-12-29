@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Question";
+}
+
+
+@model StackOverflowQuestion
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>List of Questions</h3>
+            <ul class="list-group">
+                @foreach (var question in Model.items)
+                {
+                    <li class="list-group-item">
+                        <a href="@Url.Action("QuestionDetails", "Home", new { id = question.question_id })">@question.title</a>
+                        <p class="text-muted">Score: @question.score</p>
+                        <p class="text-muted">Author: @question.owner.display_name</p>
+                        <p class="text-muted">Creation Date: @question.creation_date</p>
+                    </li>
+                }
+            </ul>
+
+        </div>
+    </div>
+</div>

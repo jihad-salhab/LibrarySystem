@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "Book";
+}
+
+@model List<Book>
+
+
+<form>
+    <label for="CategoryId">Category:</label>
+    <select id="CategoryId" name="CategoryId" class="form-control">
+        <option value="">-- Select Category --</option>
+    </select>
+    <label for="SubCategoryId">SubCategory:</label>
+
+    <select id="SubCategoryId" name="SubCategoryId" class="form-control">
+        <option value="">-- Select Sub Category --</option>
+    </select>
+</form>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>SubCategory</th>
+        </tr>
+    </thead>
+    <tbody id="book-grid">
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author?.Name</td>
+                <td>@book.Category?.Name</td>
+                <td>@book.SubCategory?.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "https://localhost:7107/api/Category/Getall",
+            success: function (categories) {
+                // Loop through the categories and add them as options to the dropdown list
+                $.each(categories.data, function (index, category) {
+                    $("#CategoryId").append(
+                        $("<option></option>")
+                            .attr("value", category.categoryId)
+                            .text(category.name)
+                    );
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+        $("#CategoryId").change(function () {
+            var selectedCategoryId = $(this).val();
+            if (selectedCategoryId != "") {
+
+                $.ajax({
+                    type: "GET",
+                    url: "https://localhost:7107/api/SubCategory/GetByCategoryId",
+                    data: { objId: selectedCategoryId },
+                    success: function (subCategories) {
+                        $("#SubCategoryId").empty();
+                        $("#SubCategoryId").append('<option value="">-- Select Sub Category --</option>');
+
+                        $.each(subCategories.data, function (i, subCategory) {
+                            $("#SubCategoryId").append('<option value="' + subCategory.subCategoryId + '">' + subCategory.name + '</option>');
+                        });
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+                $.ajax({
+                    type: "GET",
+                    url: "https://localhost:7107/api/Book/GetByCategoryId",
+                    data: { objId: selectedCategoryId },
+                    success: function (books) {
+                        $("#book-grid").empty();
+                        $.each(books.data, function (i, book) {
+                            $("#book-grid").append(
+                                '<tr><td>' + book.title + '</td><td>' + book.author.name + '</td><td>' + book.category.name + '</td><td>' + book.subCategory.name + '</td></tr>'
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+
+
+
+            }
+
+        });
+        $("#SubCategoryId").change(function () {
+            var selectedSubCategoryId = $(this).val();
+            if(selectedSubCategoryId!= ""){
+                $.ajax({
+                    type: "GET",
+                    url: "https://localhost:7107/api/Book/GetBySubCategoryId",
+                    data: { objId: selectedSubCategoryId },
+                    success: function (books) {
+                        $("#book-grid").empty();
+                        $.each(books.data, function (i, book) {
+                            $("#book-grid").append(
+                                '<tr><td>' + book.title + '</td><td>' + book.author.name + '</td><td>' + book.category.name + '</td><td>' + book.subCategory.name + '</td></tr>'
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            }
+           
+        });
+    });
+</script>
