@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "QuestionDetails";
+}
+@model StackOverflowQuestion
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group">
+                <p>Title: @Model.items[0].title</p>
+                <p>Score: @Model.items[0].score</p>
+                <p>Author: @Model.items[0].owner.display_name</p>
+                <p>Creation Date: @Model.items[0].creation_date</p>
+                <p>Tags: @string.Join(", ", Model.items[0].tags)</p>
+                <p>Is Answered: @Model.items[0].is_answered</p>
+                <p>View Count: @Model.items[0].view_count</p>
+                <p>Protected Date: @Model.items[0].protected_date</p>
+                <p>Accepted Answer ID: @Model.items[0].accepted_answer_id</p>
+                <p>Answer Count: @Model.items[0].answer_count</p>
+                <p>Last Activity Date: @Model.items[0].last_activity_date</p>
+                <p>Last Edit Date: @Model.items[0].last_edit_date</p>
+                <p>Content License: @Model.items[0].content_license</p>
+                <p>Link: @Model.items[0].link</p>
+                <p>Community Owned Date: @Model.items[0].community_owned_date</p>
+                <p>Locked Date: @Model.items[0].locked_date</p>
+                <p>Closed Date: @Model.items[0].closed_date</p>
+                <p>Closed Reason: @Model.items[0].closed_reason</p>
+            </ul>
+        </div>
+    </div>
+</div>
